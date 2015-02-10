@@ -34,6 +34,16 @@ describe Feedjira::Feed do
       expect(feed.etag).to eq 'a22ad-3190-5037e71966e80'
       expect(feed.last_modified).to eq 'Sat, 20 Sep 2014 12:34:50 GMT'
     end
+
+    it 'works when response does not contain etags' do
+      url = 'http://feeds.feedburner.com/StyleGirlfriend'
+      feed = Feedjira::Feed.fetch_and_parse url
+
+      expect(feed.class).to eq Feedjira::Parser::RSSFeedBurner
+      expect(feed.entries.count).not_to eq(0)
+      expect(feed.feed_url).to eq url
+      expect(feed.etag).to be_nil
+    end
   end
 
   describe "#add_common_feed_element" do

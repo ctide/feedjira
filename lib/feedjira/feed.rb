@@ -71,7 +71,7 @@ module Feedjira
 
       feed = parse_with parser_klass, xml
       feed.feed_url = url
-      feed.etag = response.headers['etag'].gsub(/"/, '')
+      feed.etag = response.headers['etag'].gsub(/"/, '') if response.headers['etag']
       feed.last_modified = response.headers['last-modified']
       feed
     end
