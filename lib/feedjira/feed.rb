@@ -63,7 +63,10 @@ module Feedjira
     end
 
     def self.fetch_and_parse(url)
-      response = Faraday.get url
+      response = Faraday.new(url) { |connect|
+        connect.adapter Faraday.default_adapter
+        connect.use FaradayMiddleware::FollowRedirects, limit: 3
+      }.get
       raise FetchFailure.new("Fetch failed - #{response.status}") unless response.success?
       xml = response.body
       parser_klass = determine_feed_parser_for_xml xml
